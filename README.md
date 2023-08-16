@@ -10,18 +10,31 @@ The top-level architectural documentation lives here.
 Before we released [Blackwire](https://www.blackwire.online/) as open-source,
 a small team led by [Leon Woestenberg](https://www.linkedin.com/in/leonwoestenberg/) resolved the initial challenges and provided a proof-of-concept where 100 Gbit/s WireGuard connections could be established and maintained. Our estimate is 75% of the WireGuard protocol is implemented. A lot of agile documentation was written in a three year endeavour. This needs to be filtered out and converted (TODO).
 
+*During our initial open-sourcing efforts (2023), we expect same breaking changes to the GIT references while we might re-arrange some of the repositories.*
+
 # Overview
 
 WireGuard's Type 4 messages form the data path. The messages are encapsulated (tunneled) encrypted and authenticated IP packets, as well
 as inserted 0-length keep-alive packets. The data path in [Blackwire](https://www.blackwire.online/) is fully implemented by HDL RTL code to achieve 100 Gbit/s and beyond.
 
-Other WireGuard messages form the session management, or control path.
-These are currently handled by a RISC-V core. The cryptography for
-session setup and renewal can be optionally accelerated either in software or HDL RTL, depending on the maximum number of required concurrent connections.
+- [SpinalCorundum](https://github.com/brightai-nl/SpinalCorundum) is our set of (generic) packet processing components operating in both [Corundum PCIe Ethernet framework from Alex Forencich](https://github.com/corundum/corundum) and [Blackwire](https://www.blackwire.online/) AXI Streaming formats.
+- [BlackwireSpinal](https://github.com/brightai-nl/BlackwireSpinal) are our [Blackwire](https://www.blackwire.online/) and [WireGuard](https://www.wireguard.com/) specific components.
+- [ChaCha20Poly1305](https://github.com/brightai-nl/ChaCha20Poly1305) is our high-performance ChaCha20 Poly1305 cryptography core.
+- [scalable-pipelined-lookup-fpga](https://github.com/brightai-nl/scalable-pipelined-lookup-fpga) is our high-performance dual-issue O(1) Internet address prefix lookup in AllowedIP lists. It builds upon a state-of-the art balanced tree based lookup algorithm.
+
+WireGuard's Types 1-3 messages form the session management, or control path.
+These are currently handled by a RISC-V core. The cryptography (mostly x25519) for
+session setup and renewal can be optionally accelerated either in software or HDL RTL, depending on the maximum number of required concurrent connections. Our first x25519 core is functional, but we found it resource heavy (over-performing and/but too big) and is currently being redesigned. We may release the high-performance core for other high-end applications.
+
+- [Finka](https://github.com/brightai-nl/Finka) is our top-level SoC with Ethernet AXI Streaming and AXI configuration interfaces (matching [Corundum](https://github.com/corundum/corundum)).
+- Our SoC software stack is currently being refactored for open-source release.
+
+- Additional repositories with smartNIC integration work and feature branches are currently subject to review for open-source release.
+(We cannot support this work as it requires specific lab setups. We rather would like the open-source community to integrate into a number of NIC stacks, etc. or would like the vendors to sponsor our integration work, as it is a side-effort to the actual [Blackwire](https://www.blackwire.online/) [WireGuard](https://www.wireguard.com/) IP core and requires extra resources on our end.)
 
 # Roadmap
 
-The existing work started with implementing the most risky, uncertain critical parts first. For example, the O(1) fixed-latency real-time lookup in [WireGuard](https://www.wireguard.com/)'s AllowedIP list. This complete existing work now can accept an incoming [WireGuard](https://www.wireguard.com/) session and renew it, providing 100 Gbit/s throughput.
+The existing work started with implementing the most risky, uncertain critical parts first. For example, the O(1) fixed-latency real-time lookup in [WireGuard](https://www.wireguard.com/)'s AllowedIP list. This complete existing work now can accept incoming [WireGuard](https://www.wireguard.com/) sessions and renew them, providing 100 Gbit/s total throughput.
 
 We see no risks to achieve 100% [WireGuard](https://www.wireguard.com/)
 compliance, most of the hard work has been done, we think (fingers crossed.)
@@ -34,6 +47,7 @@ Limitations in the current implementation:
 - The RX path runs at 128 Gbit/s internally, TX at 64 Gbit/s.
 - The replay protection is not yet integrated.
 - Overload cookie support is not yet implemented.
+- Not everything is fully configurable, we tested some low-risk items with a fixed configuration.
 
 Remaining items to implement in the open-source project then include research and implementation of the missing items:
 - Open-source (remaining parts of) our [Blackwire](https://www.blackwire.online/) [WireGuard](https://www.wireguard.com/) FPGA project on GitHub and/or GitLab.
