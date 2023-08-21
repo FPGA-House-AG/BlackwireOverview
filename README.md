@@ -12,7 +12,8 @@ a small team led by [Leon Woestenberg](https://www.linkedin.com/in/leonwoestenbe
 roadmap below for the large remaining parts. A lot of agile documentation was written in a three year endeavour.
 
 - The documentation needs to be filtered out and converted (TODO).
-- During our initial open-sourcing efforts (2023), we expect same breaking changes to the GIT references while we might re-arrange some of the repositories.
+- During our initial open-sourcing efforts (2023), we might have breaking GIT URI changes while we might re-arrange some of the repositories.
+- Selected work-in-progress (branches, software, tests) will be made public once prepared for release.
 
 # Overview
 
