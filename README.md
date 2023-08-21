@@ -8,9 +8,11 @@ The top-level architectural documentation lives here.
 
 # Status
 Before we released [Blackwire](https://www.blackwire.online/) as open-source,
-a small team led by [Leon Woestenberg](https://www.linkedin.com/in/leonwoestenberg/) resolved the initial challenges and provided a proof-of-concept where 100 Gbit/s WireGuard connections could be established and maintained. Our estimate is 75% of the WireGuard protocol is implemented. A lot of agile documentation was written in a three year endeavour. This needs to be filtered out and converted (TODO).
+a small team led by [Leon Woestenberg](https://www.linkedin.com/in/leonwoestenberg/) resolved the initial challenges and provided a proof-of-concept where 100 Gbit/s WireGuard connections could be established and maintained. Our estimate is 75% of the WireGuard protocol is implemented, see the
+roadmap below for the large remaining parts. A lot of agile documentation was written in a three year endeavour.
 
-*During our initial open-sourcing efforts (2023), we expect same breaking changes to the GIT references while we might re-arrange some of the repositories.*
+- The documentation needs to be filtered out and converted (TODO).
+- During our initial open-sourcing efforts (2023), we expect same breaking changes to the GIT references while we might re-arrange some of the repositories.
 
 # Overview
 
@@ -42,24 +44,29 @@ compliance, most of the hard work has been done, we think (fingers crossed.)
 Limitations in the current implementation:
 - The remote peer has to start the connection.
 - Only IPv4 inner/outer headers are supported.
+- No support for roaming yet.
 - Only 256 concurrent connections.
 - Configuring the VPN (IP addresses, cryptography keys)
 - The RX path runs at 128 Gbit/s internally, TX at 64 Gbit/s.
 - The replay protection is not yet integrated.
 - Overload cookie support is not yet implemented.
+- The handshaking crypto is not yet optimally accelerated.
 - Not everything is fully configurable, we tested some low-risk items with a fixed configuration.
 
-Remaining items to implement in the open-source project then include research and implementation of the missing items:
+Remaining items to implement in the open-source project include:
 - Open-source (remaining parts of) our [Blackwire](https://www.blackwire.online/) [WireGuard](https://www.wireguard.com/) FPGA project on GitHub and/or GitLab.
 - Port developer documentation into an open format (Sphinx, readthedocs).
 - Initiate connections from the local FPGA.
 - Support for IPv6 inner/outer headers.
+- Support for roaming.
 - Support 64K concurrent connections.
 - Add wireguard-tools (https://github.com/WireGuard/wireguard-tools) backend to configure the smartNIC.
 - Double the throughput of the TX path from 64 to 128 Gbit/s, similar to RX.
 - Integrate the replay protection block.
 - Add overload cookie support.
   ...
+
+For most we already have a proof-of-concept, partial design, or code that has to be enabled.
 
 # Frameworks
 
